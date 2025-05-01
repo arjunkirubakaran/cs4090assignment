@@ -123,3 +123,24 @@ def get_overdue_tasks(tasks):
         if not task.get("completed", False) and 
            task.get("due_date", "") < today
     ]
+
+
+from datetime import datetime, timedelta
+
+def postpone_task_by_one_day(task):
+    current_due = datetime.strptime(task["due_date"], "%Y-%m-%d")
+    new_due = current_due + timedelta(days=1)
+    task["due_date"] = new_due.strftime("%Y-%m-%d")
+    return task
+
+def filter_tasks_created_this_week(tasks):
+    one_week_ago = datetime.now() - timedelta(days=7)
+    return [
+        task for task in tasks
+        if datetime.strptime(task["created_at"], "%Y-%m-%d %H:%M:%S") >= one_week_ago
+    ]
+from datetime import datetime
+
+def get_task_age_in_days(task):
+    created = datetime.strptime(task["created_at"], "%Y-%m-%d %H:%M:%S")
+    return (datetime.now() - created).days
